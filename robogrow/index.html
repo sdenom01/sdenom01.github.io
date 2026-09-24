@@ -151,10 +151,22 @@ d.dataset.theme=localStorage.getItem("theme")||(matchMedia("(prefers-color-schem
       two details worth copying if you build one of these.</figcaption>
   </figure>
 
-  <p class="callout">One thing I would tell anyone starting this: decide what the relays do when
-     the software is <em>not</em> running before you write a line of the software. A grow light
-     stuck on for three days because a service crashed is a worse outcome than one that never
-     came on at all.</p>
+  <h3>What happens when the software stops</h3>
+
+  <p>The relays hold their last state. As long as mains power is present, a socket that was on
+     when the daemon died <strong>stays on</strong> — the Pi is the only thing that will ever
+     turn it off again.</p>
+
+  <p>That is worth saying plainly, because it decides where the risk actually lives. A missed
+     watering is a bad afternoon. A grow light left on for three days because a service crashed
+     or an SD card gave up is a cooked tent. Every hour of uptime the daemon does not have is an
+     hour the hardware is holding the bag on its own.</p>
+
+  <p class="callout">If I built this again, the lighting circuit would run through a mechanical
+     timer wired in series with the relay, so the worst case is bounded by something that does
+     not run software at all. That is the general lesson, and it took a grow tent to teach me:
+     when the failure mode of your software is "the physical thing stays on", the backstop
+     belongs in hardware, not in a retry loop.</p>
 
   <h2>The part nobody tells you about</h2>
 
