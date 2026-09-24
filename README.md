@@ -68,9 +68,10 @@ to the repo (it should contain exactly `shanedenom.me`) and set the same value
 under **Settings → Pages → Custom domain**. Then tick **Enforce HTTPS** once the
 certificate is issued.
 
-The `CNAME` file is deliberately absent until DNS resolves — with it present,
-Pages redirects every visitor to a domain that is not yet pointed here, which
-makes the site unreachable.
+The `CNAME` file must stay in the repo — it is how GitHub maps the hostname to
+this site. Without it, shanedenom.me reaches GitHub's servers but gets
+"There isn't a GitHub Pages site here", because Pages routes by Host header and
+has no record of which repo owns that name.
 
 ## Local preview
 
