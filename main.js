@@ -1,5 +1,5 @@
 /* ============================================================
-   shandenom.me
+   shanedenom.me
 
    >>> EDIT THE TWO ARRAYS BELOW. That's the whole content model. <<<
 

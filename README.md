@@ -1,4 +1,4 @@
-# shandenom.me
+# shanedenom.me
 
 Static portfolio. Three files, no build step, no dependencies.
 
@@ -47,11 +47,13 @@ The site is served from the `sdenom01/sdenom01.github.io` repo (GitHub Pages,
 
     git push origin master
 
-### Pointing shandenom.me at it
+### Pointing shanedenom.me at it
 
-The domain is registered with Squarespace, so its DNS lives in the Squarespace
-panel, not at GitHub. Delete the default Squarespace parking records for `@`
-first, then add:
+Two domains are registered at Squarespace. `shanedenom.me` is canonical —
+it matches the wordmark in the header. `shandenom.me` forwards to it.
+
+DNS lives in the Squarespace panel, not at GitHub. On **shanedenom.me**, delete
+the default parking records for `@` first, then add:
 
 | Type  | Host | Value                |
 |-------|------|----------------------|
@@ -61,8 +63,8 @@ first, then add:
 | A     | @    | 185.199.111.153      |
 | CNAME | www  | sdenom01.github.io   |
 
-Once `dig shandenom.me` returns those four addresses, add the `CNAME` file back
-to the repo (it should contain exactly `shandenom.me`) and set the same value
+Once `dig shanedenom.me` returns those four addresses, add the `CNAME` file back
+to the repo (it should contain exactly `shanedenom.me`) and set the same value
 under **Settings → Pages → Custom domain**. Then tick **Enforce HTTPS** once the
 certificate is issued.
 
