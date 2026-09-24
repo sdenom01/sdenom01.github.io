@@ -162,13 +162,37 @@ $("#filters").innerHTML = years.map(y =>
   `<button class="chip" type="button" data-y="${y}" aria-pressed="${y === "All"}">${y}</button>`
 ).join("");
 
+/* Thirty-one rows is a wall on first load. Show a slice, offer the rest. */
+const SHOWN = 8;
+const moreBtn = $("#ledger-more");
+const wrap = $("#ledger-wrap");
+let year = "All", expanded = false;
+
+function applyView() {
+  let matches = 0;
+  $$("#ledger-body tr").forEach(r => {
+    const match = year === "All" || r.dataset.y === year;
+    const visible = match && (expanded || matches < SHOWN);
+    if (match) matches++;
+    r.classList.toggle("hide", !visible);
+  });
+  const overflow = matches > SHOWN;
+  moreBtn.hidden = !overflow;
+  moreBtn.textContent = expanded ? "Show fewer" : `Show all ${matches} entries`;
+  moreBtn.setAttribute("aria-expanded", String(expanded));
+  wrap.classList.toggle("is-clipped", overflow && !expanded);
+}
+
 $("#filters").addEventListener("click", e => {
   const b = e.target.closest(".chip");
   if (!b) return;
-  $$(".chip").forEach(c => c.setAttribute("aria-pressed", c === b));
-  const y = b.dataset.y;
-  $$("#ledger-body tr").forEach(r => r.classList.toggle("hide", y !== "All" && r.dataset.y !== y));
+  $$(".chip").forEach(c => c.setAttribute("aria-pressed", String(c === b)));
+  year = b.dataset.y;
+  applyView();
 });
+
+moreBtn.addEventListener("click", () => { expanded = !expanded; applyView(); });
+applyView();
 
 /* ── scroll reveal ─────────────────────────────────────── */
 const io = new IntersectionObserver((entries, obs) => {

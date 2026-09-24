@@ -198,7 +198,7 @@ d.dataset.theme=localStorage.getItem("theme")||(matchMedia("(prefers-color-schem
     <h3>The jam ledger</h3>
     <div class="filters" id="filters" role="group" aria-label="Filter by year"></div>
   </div>
-  <div class="ledger-wrap reveal">
+  <div class="ledger-wrap reveal" id="ledger-wrap">
     <table class="ledger">
       <caption class="sr-only">Game jam entries by year</caption>
       <thead>
@@ -207,6 +207,8 @@ d.dataset.theme=localStorage.getItem("theme")||(matchMedia("(prefers-color-schem
       <tbody id="ledger-body"></tbody>
     </table>
   </div>
+  <button id="ledger-more" class="more reveal" type="button" aria-expanded="false" aria-controls="ledger-body"></button>
+
   <p class="ledger-foot reveal">Linked titles are live on itch.io — most play straight in the
      browser. The rest survive only as repositories, and a few more are lost to dead hard drives
      and jam sites that shut down. Such is the format.</p>
