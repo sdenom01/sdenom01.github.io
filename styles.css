@@ -17,7 +17,7 @@
   --grain:      .045;
   --shadow:     0 1px 0 var(--rule), 0 18px 40px -28px #17160F55;
 
-  --f-disp: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --f-disp: "Archivo Black", "Helvetica Neue", Arial, sans-serif;
   --f-body: "Newsreader", Georgia, "Times New Roman", serif;
   --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
@@ -45,6 +45,9 @@
 }
 
 *,*::before,*::after{ box-sizing:border-box; }
+
+/* Archivo Black has a single weight — never let the browser fake a bolder one. */
+html{ font-synthesis:none; }
 
 html{ scroll-behavior:smooth; }
 @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
@@ -164,14 +167,13 @@ body{
 .bigname{
   font-family:var(--f-disp);
   font-weight:800;
-  font-size:clamp(3.4rem, 15.5vw, 13rem);
+  font-size:clamp(3rem, 14vw, 11rem);   /* Archivo Black runs ~18% wider than the old face */
   line-height:.82;
   letter-spacing:calc(-.045em + 2px);   /* 2px looser at every size */
   margin:0 0 clamp(1.75rem,5vh,3.25rem);
-  font-variation-settings:"wdth" 92;
 }
 .bigname .ln{ display:block; }
-.bigname .ln-2{ padding-left:clamp(0rem,6vw,5.5rem); }
+.bigname .ln-2{ padding-left:clamp(0rem,3vw,2.5rem); }
 .bigname .dot{ color:var(--accent); font-style:normal; }
 
 .hero-cols{
@@ -250,7 +252,6 @@ body{
   font-family:var(--f-disp); font-weight:700;
   font-size:clamp(1.9rem,1.2rem + 2.4vw,3.4rem);
   letter-spacing:-.03em; line-height:1; margin:0; flex:none;
-  font-variation-settings:"wdth" 92;
 }
 .secthead .rule{ flex:1; height:1.5px; background:var(--rule-hard); opacity:.85; min-width:1rem; }
 .secthead .note{
@@ -488,7 +489,6 @@ a.gcard-go:hover::after{ transform:translateX(.3rem); }
   font-family:var(--f-disp); font-weight:800;
   font-size:clamp(2rem,1.4rem + 2vw,3.2rem);
   letter-spacing:-.035em; margin:0 0 .5rem; line-height:.95;
-  font-variation-settings:"wdth" 88;
 }
 .rig-sub{
   font-family:var(--f-mono); font-size:.72rem; line-height:1.7;
@@ -601,7 +601,6 @@ a.gcard-go:hover::after{ transform:translateX(.3rem); }
   font-family:var(--f-disp); font-weight:800;
   font-size:clamp(2.6rem,1.6rem + 5vw,6rem);
   letter-spacing:-.04em; line-height:.92; margin:1.5rem 0 1rem;
-  font-variation-settings:"wdth" 90;
 }
 .phead .sub{
   font-size:clamp(1.1rem,1rem + .7vw,1.5rem); line-height:1.45;
