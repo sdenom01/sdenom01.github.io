@@ -1,19 +1,332 @@
-﻿<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shane Denomme — Software Engineer &amp; Technical Lead</title>
+<meta name="description" content="Engineering leader, 13+ years. Architected a logistics platform that moved 2M+ tons of material in its first year. Games, home automation, electronics.">
+<link rel="canonical" href="https://shandenom.me/">
+<meta property="og:title" content="Shane Denomme — Software Engineer &amp; Technical Lead">
+<meta property="og:description" content="13+ years taking software from whiteboard to enterprise. Games, home automation, electronics.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://shandenom.me/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23141310'/><text y='.9em' x='.08em' font-size='86' font-family='Georgia,serif' font-weight='700' fill='%23D9542B'>S</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400;12..96,75..100,700;12..96,75..100,800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>
+/* Set theme and mark JS-available before first paint: no flash of the wrong
+   theme, and .reveal stays visible if main.js never loads. */
+(function(){var d=document.documentElement;d.classList.add("js");try{
+d.dataset.theme=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");
+}catch(e){}})();
+</script>
+</head>
+<body>
 
-	<style>
-	  h1   {color:red}
-	  h2   {color:blue}
-	</style>
+<a class="skip" href="#work">Skip to content</a>
 
-	<head>
-		<title>Shane Denomme</title>
-	</head>
+<!-- ── film grain ─────────────────────────────────────────── -->
+<svg class="grain" aria-hidden="true" focusable="false">
+  <filter id="grainFilter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#grainFilter)"/>
+</svg>
 
-	<body background="\Images\Shane\shane.jpg">
-		<div style="margin:0 auto">
-			<h1>Hello World!</h1>
-			<h2>Woo!</h2>
-		</div>
-	</body>
+<!-- ── nav ────────────────────────────────────────────────── -->
+<header class="topbar">
+  <a class="mark" href="#top"><span>SD</span></a>
+  <nav aria-label="Sections">
+    <a href="#work">Work</a>
+    <a href="#games">Games</a>
+    <a href="#workshop">Workshop</a>
+    <a href="#method">Method</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <button id="theme" class="theme" type="button" aria-label="Switch to dark theme" aria-pressed="false">
+    <span class="theme-dot"></span><span class="theme-txt">Dark</span>
+  </button>
+</header>
+
+<main id="top">
+
+<!-- ══ HERO ═══════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-grid" aria-hidden="true"></div>
+
+  <div class="hero-inner">
+    <p class="eyebrow reveal">Est. 2013 · Software Engineer / Technical Lead</p>
+
+    <h1 class="bigname reveal" aria-label="Shane Denomme">
+      <span class="ln">Shane</span>
+      <span class="ln ln-2">Denom<em class="dot">.me</em></span>
+    </h1>
+
+    <div class="hero-cols">
+      <p class="lede reveal">
+        I take software from whiteboard to enterprise. Most recently that meant
+        architecting and launching a logistics platform that moved
+        <strong>2M+ tons of material</strong> in its first year.
+        <span class="lede-b">A builder at heart — when I'm not leading teams, I'm
+        writing code for games, home automation, and electronics.</span>
+      </p>
+
+      <dl class="spec reveal">
+        <div><dt>Now</dt><dd>Engineering Manager, Livegistics</dd></div>
+        <div><dt>Years</dt><dd>13+</dd></div>
+        <div><dt>Stack</dt><dd>TypeScript · React / Native · Node · Postgres · GCP · C# · Kotlin</dd></div>
+        <div><dt>Also</dt><dd>Unity · Raspberry Pi · a soldering iron</dd></div>
+      </dl>
+    </div>
+
+    <div class="hero-cta reveal">
+      <a class="btn btn-solid" href="#games">See what I've built</a>
+      <a class="btn" href="assets/shane-denomme-resume-2026.pdf" download>Resume <span class="btn-meta">PDF</span></a>
+    </div>
+  </div>
+
+  <!-- stat ticker -->
+  <div class="ticker" aria-label="Career highlights">
+    <div class="ticker-track">
+      <span class="tk"><b>2M+</b> tons of material moved</span><i>◆</i>
+      <span class="tk"><b>1M+</b> barrels processed</span><i>◆</i>
+      <span class="tk"><b>100K+</b> loads through the platform</span><i>◆</i>
+      <span class="tk"><b>4×</b> team commit velocity</span><i>◆</i>
+      <span class="tk"><b>90%</b> drop in mobile error rate</span><i>◆</i>
+      <span class="tk"><b>25+</b> completed game jams</span><i>◆</i>
+      <span class="tk"><b>0</b> customers churned in the v2 → v3 migration</span><i>◆</i>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WORK ═══════════════════════════════════════════════ -->
+<section id="work" class="band">
+  <div class="secthead reveal">
+    <span class="num">01</span>
+    <h2>Work</h2>
+    <span class="rule"></span>
+    <span class="note">Four companies, thirteen years</span>
+  </div>
+
+  <ol class="manifest">
+    <li class="job reveal is-lead">
+      <div class="job-when"><span class="yr">2023</span><span class="to">— Present</span></div>
+      <div class="job-body">
+        <h3>Livegistics</h3>
+        <p class="roles"><span class="role role-now">Engineering Manager</span><span class="role">Lead Developer</span></p>
+        <p class="job-sum">Leading engineering at a logistics startup — owning delivery of the v3
+          platform launch while staying a hands-on contributor across the stack.</p>
+        <ul class="bullets">
+          <li>Launched a next-generation platform and migrated the <em>entire</em> existing
+              customer base off v2 with zero churn, running 1:1 white-glove onboarding
+              through the whole transition.</li>
+          <li>Drove first-year adoption to <b>2M+ tons of material</b>, <b>1M+ barrels</b>, and
+              <b>100K+ loads processed</b> — while landing new clients in an entirely new
+              product vertical.</li>
+          <li>Championed early adoption of LLM developer tooling across the team,
+              <b>quadrupling commit velocity</b> without loosening review standards.</li>
+          <li>Authored and rolled out the engineering and product policies — code review
+              standards, release process, product development workflow — that scaled the
+              team's output.</li>
+          <li>As Lead Developer: architected the next-gen platform from whiteboard to
+              enterprise deployment, cut <b>mobile error rates by 90%</b> (measured in Sentry)
+              through systematic triage, and designed a git-flow release pipeline with
+              cascade merging for reliable multi-environment deploys.</li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="job reveal">
+      <div class="job-when"><span class="yr">2021</span><span class="to">— 2023</span></div>
+      <div class="job-body">
+        <h3>365 Retail Markets</h3>
+        <p class="roles"><span class="role">Mobile Application Developer</span></p>
+        <ul class="bullets">
+          <li>Built "smart cooler" systems — React Native modules bridged to Android
+              hardware for unattended retail.</li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="job reveal">
+      <div class="job-when"><span class="yr">2017</span><span class="to">— 2021</span></div>
+      <div class="job-body">
+        <h3>CU Solutions Group</h3>
+        <p class="roles"><span class="role">Senior Application Developer</span></p>
+        <ul class="bullets">
+          <li>Designed and shipped multiple Java / Kotlin mobile applications, then led the
+              transition to Node.js and React Native.</li>
+          <li>Managed a portfolio of white-labelled applications and their release trains.</li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="job reveal">
+      <div class="job-when"><span class="yr">2013</span><span class="to">— 2017</span></div>
+      <div class="job-body">
+        <h3>Towbook</h3>
+        <p class="roles"><span class="role">Application Developer</span></p>
+        <ul class="bullets">
+          <li>Fourth employee at a small logistics startup. Started as an intern, taught
+              myself mobile development, and grew into full ownership of the Android
+              application — support tickets through architecture.</li>
+        </ul>
+      </div>
+    </li>
+  </ol>
+</section>
+
+<!-- ══ GAMES ══════════════════════════════════════════════ -->
+<section id="games" class="band band-alt">
+  <div class="secthead reveal">
+    <span class="num">02</span>
+    <h2>Games</h2>
+    <span class="rule"></span>
+    <span class="note">Unity · C# · 25+ jams since 2019</span>
+  </div>
+
+  <p class="band-intro reveal">Two projects in long-form development, a jam build you can play
+     right here without leaving the page, and a decade of weekend deadlines underneath them.</p>
+
+  <div id="featured" class="featured"><!-- rendered from main.js --></div>
+
+  <!-- ── jam ledger ── -->
+  <div class="ledger-head reveal">
+    <h3>The jam ledger</h3>
+    <div class="filters" id="filters" role="group" aria-label="Filter by year"></div>
+  </div>
+  <div class="ledger-wrap reveal">
+    <table class="ledger">
+      <caption class="sr-only">Game jam entries by year</caption>
+      <thead>
+        <tr><th scope="col">Year</th><th scope="col">Entry</th><th scope="col">Jam / Notes</th><th scope="col">Engine</th></tr>
+      </thead>
+      <tbody id="ledger-body"></tbody>
+    </table>
+  </div>
+  <p class="ledger-foot reveal">Linked titles are live on itch.io — most play straight in the
+     browser. The rest survive only as repositories, and a few more are lost to dead hard drives
+     and jam sites that shut down. Such is the format.</p>
+</section>
+
+<!-- ══ WORKSHOP ═════════════════════════════════════════ -->
+<section id="workshop" class="band">
+  <div class="secthead reveal">
+    <span class="num">03</span>
+    <h2>Workshop</h2>
+    <span class="rule"></span>
+    <span class="note">Things with wires in them</span>
+  </div>
+
+  <p class="band-intro reveal">Software is where I work. This is where I go when I want the
+     thing I made to sit on a table and be touched. Each of these has a full write-up.</p>
+
+  <div class="shelf">
+    <a class="shelf-card reveal" href="robogrow/">
+      <div class="shelf-media">
+        <img src="assets/robogrow/logo.png" alt="Robogrow logo — a robot cradling a potted seedling" loading="lazy" decoding="async">
+      </div>
+      <div class="shelf-body">
+        <h3>Robogrow</h3>
+        <p class="shelf-meta">2015 — present · Raspberry Pi · Node.js · Relays</p>
+        <p class="shelf-desc">A Raspberry Pi in a grow tent that reads the room and decides what
+           to do about it. Sensors feed a Node service, the service throws 120v relays, and a web
+           dashboard and Android app let me override any of it from anywhere. Ten years, four
+           rewrites, still running.</p>
+        <span class="shelf-go">Read the build</span>
+      </div>
+    </a>
+
+    <a class="shelf-card reveal" href="terrain/">
+      <div class="shelf-media">
+        <img src="assets/terrain/hero.jpg" alt="The finished battle map lit at night, lava field glowing beneath a green-lit shrine" loading="lazy" decoding="async">
+      </div>
+      <div class="shelf-body">
+        <h3>The Tomb Battle Map</h3>
+        <p class="shelf-meta">2025 · Foam · Arduino · FastLED · 82 addressable LEDs</p>
+        <p class="shelf-desc">A tiered tabletop battle map for the finale of a D&amp;D campaign, carved from foam and wired with three independent LED circuits — a drifting
+           lava gradient, four flickering torches, and a sickly green shrine that breathes.</p>
+        <span class="shelf-go">Read the build</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ══ METHOD ═════════════════════════════════════════════ -->
+<section id="method" class="band band-alt">
+  <div class="secthead reveal">
+    <span class="num">04</span>
+    <h2>Method</h2>
+    <span class="rule"></span>
+    <span class="note">How I work with AI</span>
+  </div>
+
+  <div class="essay">
+    <p class="pull reveal">Agentic AI has changed how I work more in the past year than anything
+       else in my career.</p>
+
+    <div class="essay-cols">
+      <p class="reveal">I have watched it help a small team quadruple its commit output — and
+         more importantly, I have watched the confidence and quality of that work rise at the
+         same time. These tools are only as good as the direction they are given, though.</p>
+
+      <p class="reveal">My day now looks less heads-down problem solving and more like a mix of
+         manager, designer, and QA: writing clear specifications up front, reviewing generated
+         code the same way I would review a junior developer's pull request, and testing the
+         result against what was actually asked for.</p>
+
+      <p class="reveal">I lean on tools like GitHub's Spec Kit and practices like Behavior
+         Driven Development to keep requirements written in plain language, so the people on
+         the team stay the source of truth for what gets built and why. I have also learned
+         when to put the tools down, because some problems are still faster and safer to solve
+         by hand.</p>
+    </div>
+
+    <ul class="toolrow reveal" aria-label="Tools I use">
+      <li>Claude Code</li><li>Cursor</li><li>Gemini</li>
+      <li>Google AI Studio / Vertex AI</li><li>Copilot</li><li>Devin.ai</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══ CONTACT ════════════════════════════════════════════ -->
+<section id="contact" class="band band-end">
+  <div class="secthead reveal">
+    <span class="num">05</span>
+    <h2>Contact</h2>
+    <span class="rule"></span>
+    <span class="note">Open to conversations</span>
+  </div>
+
+  <div class="contact-grid">
+    <p class="contact-lede reveal">If you're building something that has to work in the real
+       world — trucks, sensors, material, people who don't have time for a bad app — I'd like
+       to hear about it.</p>
+
+    <ul class="contact-list reveal">
+      <li>
+        <span class="ck">Email</span>
+        <a class="cv" id="mail" href="#" data-u="sdenomme15" data-d="gmail.com">sdenomme15 [at] gmail.com</a>
+      </li>
+      <li><span class="ck">Phone</span><a class="cv" href="tel:+18102780562">(810) 278-0562</a></li>
+      <li><span class="ck">LinkedIn</span><a class="cv" id="li" href="https://www.linkedin.com/in/shane-denomme-714606a8/">/in/shane-denomme</a></li>
+      <li><span class="ck">GitHub</span><a class="cv" href="https://github.com/sdenom01">@sdenom01</a></li>
+      <li><span class="ck">Resume</span><a class="cv" href="assets/shane-denomme-resume-2026.pdf" download>Download PDF</a></li>
+    </ul>
+  </div>
+
+  <footer class="foot">
+    <span>Shane Denomme</span>
+    <span class="foot-mid">AI-assisted, hand-reviewed. No framework, no tracking.</span>
+    <span id="year">2026</span>
+  </footer>
+</section>
+
+</main>
+
+<script src="main.js"></script>
+</body>
 </html>

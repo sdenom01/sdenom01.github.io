@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Tomb Battle Map — Shane Denomme</title>
+<meta name="description" content="A tiered tabletop battle map carved from foam and wired with three independent addressable LED circuits driven by an Arduino.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23141310'/><text y='.9em' x='.08em' font-size='86' font-family='Georgia,serif' font-weight='700' fill='%23D9542B'>S</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400;12..96,75..100,700;12..96,75..100,800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<script>
+(function(){var d=document.documentElement;d.classList.add("js");try{
+d.dataset.theme=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");
+}catch(e){}})();
+</script>
+</head>
+<body>
+
+<svg class="grain" aria-hidden="true" focusable="false">
+  <filter id="grainFilter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#grainFilter)"/>
+</svg>
+
+<header class="topbar">
+  <a class="mark" href="../"><span>SD</span></a>
+  <nav aria-label="Sections">
+    <a href="../#work">Work</a>
+    <a href="../#games">Games</a>
+    <a href="../#workshop">Workshop</a>
+    <a href="../#contact">Contact</a>
+  </nav>
+  <button id="theme" class="theme" type="button" aria-label="Switch to dark theme" aria-pressed="false">
+    <span class="theme-dot"></span><span class="theme-txt">Dark</span>
+  </button>
+</header>
+
+<main>
+
+<section class="phead">
+  <div class="phead-in">
+    <a class="back" href="../#workshop">Workshop</a>
+
+    <h1>The Tomb<br>Battle Map</h1>
+
+    <p class="sub">A tiered tabletop battle map for the finale of a D&amp;D campaign — carved
+       from foam, painted, and wired with three independent addressable LED circuits that never
+       quite repeat themselves.</p>
+
+    <dl class="pfacts">
+      <div><dt>Built</dt><dd>March 2025</dd></div>
+      <div><dt>Structure</dt><dd>Carved &amp; painted foam</dd></div>
+      <div><dt>Electronics</dt><dd>Arduino · FastLED · WS2812</dd></div>
+      <div><dt>Lighting</dt><dd>82 addressable LEDs, 3 circuits</dd></div>
+      <div><dt>Frame rate</dt><dd>~50 fps (20 ms loop)</dd></div>
+    </dl>
+  </div>
+</section>
+
+<div class="pbody">
+
+  <figure>
+    <img src="../assets/terrain/hero.jpg" alt="The finished battle map photographed in a dark room: a glowing orange lava field in the foreground, a green-lit shrine platform behind it, and a monster miniature raised on a lit pillar.">
+    <figcaption>Lights out, everything running. The underlight, the torches and the shrine are
+      three separate circuits on three separate pins — they drift independently, so the table
+      never settles into a loop the players can read.</figcaption>
+  </figure>
+
+  <h2>What it's for</h2>
+
+  <p>Tabletop terrain is usually static. You put a printed mat down, you put some rocks on it,
+     and everyone imagines the rest. The point of this build was to make the table do some of
+     the imagining — to have the light actually move, the torches actually gutter, and the
+     shrine glow like something is wrong with it.</p>
+
+  <p>It was made for one night: the last encounter of a long campaign. Everything about the
+     layout is in service of that fight — a raised shrine platform where the ritual happens, a
+     lava basin below it that players have to cross, torch-lit alcoves for the things waiting in
+     them, and a narrow bridge that turns the whole thing into a choke point.</p>
+
+  <figure>
+    <img src="../assets/terrain/overhead.jpg" alt="Overhead view of the whole map, showing the tiered octagonal shrine platform above and the lava basin below, with torch-lit alcoves cut into both tiers.">
+    <figcaption>The full layout from above. Shrine platform up top, lava basin below, alcoves
+      cut into both tiers — and a single bridge between them.</figcaption>
+  </figure>
+
+  <h2>Three circuits, not one</h2>
+
+  <p>The obvious build is one long strip and one array. I split it into three, on three pins,
+     because the effects have nothing to do with each other and I did not want to spend the rest
+     of the project doing index arithmetic to keep them apart:</p>
+
+  <pre class="code"><span class="c">// Three strips, three arrays, three completely separate jobs.</span>
+<span class="k">#define</span> LED_PIN          6   <span class="c">// main strip — drifting blue/purple</span>
+<span class="k">#define</span> ROOM_PIN         5   <span class="c">// torches</span>
+<span class="k">#define</span> SPOOKY_PIN       4   <span class="c">// the shrine</span>
+<span class="k">#define</span> NUM_LEDS        72
+<span class="k">#define</span> NUM_TORCHES      4
+<span class="k">#define</span> NUM_SPOOKY_LEDS  6   <span class="c">// two groups of three</span>
+
+FastLED.addLeds&lt;WS2812, LED_PIN,    GRB&gt;(mainLeds,   NUM_LEDS);
+FastLED.addLeds&lt;WS2812, ROOM_PIN,   GRB&gt;(torchLeds,  NUM_TORCHES);
+FastLED.addLeds&lt;WS2812, SPOOKY_PIN, GRB&gt;(spookyLeds, NUM_SPOOKY_LEDS);</pre>
+
+  <p>Each array gets its own update function, they all write into their own buffer, and a single
+     <code>FastLED.show()</code> pushes everything at once. Adding a fourth effect later meant
+     adding a pin and a function, not rewriting the loop.</p>
+
+  <h2>Making light look alive</h2>
+
+  <p>The whole trick with this kind of lighting is that anything perfectly periodic reads as
+     fake within about ten seconds. All three effects are built to avoid settling.</p>
+
+  <h3>The main strip</h3>
+
+  <p>Seventy-two LEDs running a sine wave across their own length, offset by a hue that creeps
+     forward one step every frame. The hue is clamped to a narrow band so it wanders through
+     blues and purples and never cycles further — a full rainbow sweep would read as a party
+     light. It is the cold ambient the warm sources get to play against.</p>
+
+  <pre class="code">uint8_t hue = 160 + (sin8(i * 255 / NUM_LEDS + baseHue) &gt;&gt; 2);
+mainLeds[i] = CHSV(hue, 255, 255);   <span class="c">// ~160-200: blue through purple</span></pre>
+
+  <h3>The torches</h3>
+
+  <p>No wave at all — every torch picks a fresh random brightness and a fresh warm hue on every
+     single frame. At 50 frames a second that reads as a proper flicker. The ranges are narrow
+     on purpose: brightness never drops below 200, so a torch never actually appears to go out,
+     and the hue stays in the orange band.</p>
+
+  <pre class="code">uint8_t brightness = random(200, 250);
+torchLeds[i] = CHSV(random(20, 40), 255, brightness);</pre>
+
+  <h3>The shrine</h3>
+
+  <p>Six LEDs in two groups of three. Each group runs its own small gradient, and the base hue
+     advances by a random one or two steps per frame instead of a fixed one — so the two groups
+     slide out of phase with each other and never resynchronise. The hue is hard-constrained to
+     a ten-degree window, because green is the one colour where a few degrees of drift stops
+     looking sickly and starts looking like a Christmas light.</p>
+
+  <pre class="code">hue = constrain(hue, 85, 95);                       <span class="c">// a narrow, ugly green</span>
+spookyLeds[i] = CHSV(hue, 255, random(100, 120));   <span class="c">// dim, and breathing</span></pre>
+
+  <p class="callout">Every one of those magic numbers is a number I got wrong first. The
+     original torch range went down to zero brightness and the torches looked like they were
+     short-circuiting. The shrine was unconstrained and drifted into mint. You do not find these
+     values on paper — you find them by putting the thing on a table in a dark room and
+     staring at it.</p>
+
+  <div class="gallery">
+    <figure>
+      <img src="../assets/terrain/shrine.jpg" alt="Close-up of the shrine platform lit in green, with fog rolling over a cauldron and painted miniatures around it.">
+      <figcaption>The shrine at ground level. The green is dim on purpose — it has to lose to
+        the lava.</figcaption>
+    </figure>
+    <figure>
+      <img src="../assets/terrain/lava.jpg" alt="Wide view of the lava basin glowing orange beneath the raised shrine platform.">
+      <figcaption>The lava basin, lit from beneath the surface.</figcaption>
+    </figure>
+    <figure>
+      <img src="../assets/terrain/alcove.jpg" alt="A torch-lit alcove containing painted miniatures around a table.">
+      <figcaption>One of the torch-lit alcoves, with the warm circuit doing its work.</figcaption>
+    </figure>
+    <figure>
+      <img src="../assets/terrain/daylight.jpg" alt="The map photographed in daylight on a workbench, showing the carved foam structure and the central pillar.">
+      <figcaption>Daylight, on the bench. A useful reminder of how much of the effect is the
+        dark room rather than the sculpt.</figcaption>
+    </figure>
+    <figure>
+      <img src="../assets/terrain/beholder.jpg" alt="Low-angle night shot of a tentacled monster miniature mounted above a lit pillar, with the lava field glowing below and figures crossing a bridge.">
+      <figcaption>Table height, lights out — which is the only angle that actually matters.</figcaption>
+    </figure>
+  </div>
+
+  <h2>What I'd carry forward</h2>
+
+  <ul>
+    <li>Separate pins per effect cost nothing and saved the entire project from index
+        arithmetic. I would do this again on a strip a tenth of the size.</li>
+    <li>Constrain your hue ranges early. Almost every effect that looked cheap looked cheap
+        because the colour was allowed to wander too far.</li>
+    <li>Randomness per frame beats a clever waveform for anything that is supposed to be
+        fire.</li>
+    <li>Build it, then light it, then tune it in the dark. The numbers that work under a
+        workshop light are not the numbers that work at the table.</li>
+  </ul>
+
+  <p style="margin-top:2.5rem"><a class="back" href="../#workshop">Back to the workshop</a></p>
+
+</div>
+</main>
+
+<script>
+(function(){
+  var btn=document.getElementById("theme");
+  function set(t){
+    document.documentElement.dataset.theme=t;
+    var dark=t==="dark";
+    btn.setAttribute("aria-pressed",dark);
+    btn.setAttribute("aria-label","Switch to "+(dark?"light":"dark")+" theme");
+    btn.querySelector(".theme-txt").textContent=dark?"Light":"Dark";
+  }
+  set(document.documentElement.dataset.theme||"light");
+  btn.addEventListener("click",function(){
+    var t=document.documentElement.dataset.theme==="dark"?"light":"dark";
+    try{localStorage.setItem("theme",t);}catch(e){}
+    set(t);
+  });
+})();
+</script>
+</body>
+</html>

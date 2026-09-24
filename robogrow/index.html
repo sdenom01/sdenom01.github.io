@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robogrow — Shane Denomme</title>
+<meta name="description" content="Modular garden automation on a Raspberry Pi: sensors, relay control for lighting and watering, a web dashboard and an Android app. Ten years and four rewrites.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23141310'/><text y='.9em' x='.08em' font-size='86' font-family='Georgia,serif' font-weight='700' fill='%23D9542B'>S</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400;12..96,75..100,700;12..96,75..100,800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<script>
+(function(){var d=document.documentElement;d.classList.add("js");try{
+d.dataset.theme=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");
+}catch(e){}})();
+</script>
+</head>
+<body>
+
+<svg class="grain" aria-hidden="true" focusable="false">
+  <filter id="grainFilter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#grainFilter)"/>
+</svg>
+
+<header class="topbar">
+  <a class="mark" href="../"><span>SD</span></a>
+  <nav aria-label="Sections">
+    <a href="../#work">Work</a>
+    <a href="../#games">Games</a>
+    <a href="../#workshop">Workshop</a>
+    <a href="../#contact">Contact</a>
+  </nav>
+  <button id="theme" class="theme" type="button" aria-label="Switch to dark theme" aria-pressed="false">
+    <span class="theme-dot"></span><span class="theme-txt">Dark</span>
+  </button>
+</header>
+
+<main>
+
+<section class="phead">
+  <div class="phead-in">
+    <a class="back" href="../#workshop">Workshop</a>
+
+    <h1>Robogrow</h1>
+
+    <p class="sub">A Raspberry Pi sitting in a grow tent, reading the room and deciding what to
+       do about it. Ten years, four rewrites, and it is still running.</p>
+
+    <dl class="pfacts">
+      <div><dt>Running since</dt><dd>2015</dd></div>
+      <div><dt>Brain</dt><dd>Raspberry Pi</dd></div>
+      <div><dt>Service</dt><dd>Node.js daemon + API</dd></div>
+      <div><dt>Clients</dt><dd>Web dashboard · Android</dd></div>
+      <div><dt>Switching</dt><dd>120v / 240v relay bank</dd></div>
+    </dl>
+  </div>
+</section>
+
+<div class="pbody">
+
+  <figure>
+    <img src="../assets/robogrow/bench.jpg" alt="A white board on a workbench holding a Raspberry Pi GPIO breakout on a breadboard, wired out to a TSL2561 light sensor, a DHT22 temperature and humidity sensor, a two-channel relay module and a row of status LEDs, with pin assignments written on the board in marker.">
+    <figcaption>The prototype bench. Every pin assignment written straight onto the board in
+      marker, because the alternative is re-deriving it from the wiring every time you come
+      back to it after a month away.</figcaption>
+  </figure>
+
+  <h2>The problem</h2>
+
+  <p>Plants want boring consistency and I am not boring or consistent. Lights want to be on for
+     exactly the same hours every day whether or not I am home. Soil wants water when it is dry,
+     not when I remember. Temperature and humidity want to stay inside a window that shifts with
+     the season and the weather outside the house.</p>
+
+  <p>All of that is a control loop, and control loops are the one thing a computer will
+     genuinely never get bored of.</p>
+
+  <h2>The shape of it</h2>
+
+  <p>Three stages, deliberately kept separate. Sensors know nothing about relays; relays know
+     nothing about schedules; the clients know nothing except what the API tells them.</p>
+
+  <div class="schematic">
+    <div class="node node-sense">
+      <span class="node-label">Sense</span>
+      <ul><li>Temperature</li><li>Humidity</li><li>Light + infrared</li><li>Soil moisture</li></ul>
+    </div>
+    <div class="wire" aria-hidden="true"><span></span></div>
+    <div class="node node-brain">
+      <span class="node-label">Decide</span>
+      <ul><li>Raspberry Pi</li><li>Node.js daemon</li><li>Scheduling + thresholds</li><li>Sensor calibration offsets</li></ul>
+    </div>
+    <div class="wire" aria-hidden="true"><span></span></div>
+    <div class="node node-act">
+      <span class="node-label">Act</span>
+      <ul><li>120v / 240v relay bank</li><li>Lighting cycles</li><li>Watering</li><li>Logged to dashboard</li></ul>
+    </div>
+  </div>
+
+  <p>The daemon reads the sensors, compares them against the configured thresholds and
+     schedule, and throws relays when something needs to change. An API sits on top of the same
+     data, so the web dashboard and the Android app are two views of one source of truth rather
+     than two implementations of the same logic.</p>
+
+  <h2>What it actually reads</h2>
+
+  <p>Two sensors do most of the work, and they talk to the Pi in completely different
+     ways — which is half the reason the sensing layer is its own module.</p>
+
+  <ul>
+    <li>A <strong>DHT22</strong> on GPIO 4 for temperature and humidity — a single-wire
+        protocol with strict timing, handled through
+        <a href="https://github.com/sdenom01/node-dht-sensor" target="_blank" rel="noopener">node-dht-sensor</a>,
+        which I keep a fork of.</li>
+    <li>A <strong>TSL2561</strong> over I²C for light. It returns a broadband channel and an
+        infrared one, which is why the dashboard graphs infrared and lux separately rather than
+        reducing them to one "brightness" number.</li>
+  </ul>
+
+  <p>The row of LEDs along the edge of the bench board is labelled <code>Temp</code>,
+     <code>Lux</code>, <code>Relay</code> and <code>Sent</code>. They are not decoration —
+     they are the debugger. When the service is headless in a tent, four LEDs telling you which
+     stage of the loop last completed will find a fault faster than SSHing in and reading
+     logs.</p>
+
+  <figure>
+    <img src="../assets/robogrow/pi.jpg" alt="A Raspberry Pi connected by a rainbow ribbon cable to prototyping boards carrying a DHT22 sensor, an LED indicator board glowing green, and a two-channel relay module with its status LEDs lit red.">
+    <figcaption>The same loop off the bench board and onto proto-hats. Green means the read
+      landed.</figcaption>
+  </figure>
+
+  <h2>Switching mains</h2>
+
+  <p>This is the end of the chain, and the part where being clever is actively dangerous — so
+     it is the part that stayed the most boring. A four-channel relay module drives two duplex
+     receptacles, giving four independently switched sockets for lights and pumps. The relays
+     are rated 10&nbsp;A at 250&nbsp;VAC; mains lands on a barrier terminal block and is
+     distributed with crimped ring terminals rather than anything twisted together, and ground
+     is bonded in bare copper across both receptacles.</p>
+
+  <p>The whole assembly is screwed down to a board so that nothing can shift into anything else,
+     and the low-voltage side that the Pi touches stays on its own side of the layout.</p>
+
+  <figure>
+    <img src="../assets/robogrow/mains.jpg" alt="A mains switching board: a black barrier terminal block with crimped ring terminals on the left, a four-channel blue relay module below, and two white duplex receptacles mounted to plywood with copper ground bonding between them.">
+    <figcaption>Four channels, four sockets. The yellow crimps and the bare copper bond are the
+      two details worth copying if you build one of these.</figcaption>
+  </figure>
+
+  <p class="callout">One thing I would tell anyone starting this: decide what the relays do when
+     the software is <em>not</em> running before you write a line of the software. A grow light
+     stuck on for three days because a service crashed is a worse outcome than one that never
+     came on at all.</p>
+
+  <h2>The part nobody tells you about</h2>
+
+  <p class="callout">A DHT22 reads about a degree and a half warm when it is sitting next to a
+     ballast. A light sensor drifts. Two identical sensors in the same tent will disagree with
+     each other, and both of them will disagree with the thermometer you trust.</p>
+
+  <p>So every sensor in the config carries a trim value. Not because the code needed to be
+     configurable, but because the physical world does not read like the datasheet and the only
+     way to find the offset is to be wrong first and measure the difference.</p>
+
+  <p>This is the single biggest lesson the project taught me, and it transfers directly to
+     software: <strong>the model is never the thing.</strong> A schedule that is correct in code
+     is still wrong if the sensor feeding it is lying by a degree and a half.</p>
+
+  <h2>Something to actually look at</h2>
+
+  <p>A daemon that only reports to a log file is a daemon you stop trusting. The app is where
+     the readings become a thing you can glance at: a list of grows, each showing its current
+     temperature and humidity against the range it is supposed to hold, and a light icon for
+     what the relays are doing right now.</p>
+
+  <p>Open one and you get the history — temperature and humidity on one chart, infrared and lux
+     on another, straight off the TSL2561's two channels.</p>
+
+  <figure>
+    <img src="../assets/robogrow/app.png" alt="Five app screens connected by flow arrows: sign in with the Robogrow logo, sign up, a navigation drawer with Grows, Configs and Settings, a grow list showing temperature and humidity bars for each grow, and a landscape detail screen with temperature/humidity and infrared/lux charts.">
+    <figcaption>The client flow, from sign-in through to a grow's history. Dark theme because
+      the times you check it are at night, standing in a dark room.</figcaption>
+  </figure>
+
+  <h2>Four rewrites</h2>
+
+  <ul>
+    <li><strong>2017 — <code>raspberry-*</code>.</strong> The first working version. A Node
+        server, a web client, and an Android app, all named after the hardware because I had
+        not thought of a name yet.</li>
+    <li><strong>2020 — <code>robogrow</code>.</strong> The rename, and the first version with a
+        real configuration model instead of constants compiled into the daemon.</li>
+    <li><strong>2020 — <code>robogrow-android-kotlin</code>.</strong> The Android client
+        rebuilt in Kotlin.</li>
+    <li><strong>2021 — <code>robogrow-io</code>.</strong> Split into
+        <code>robogrow-api</code>, <code>robogrow-client</code> and
+        <code>robogrow-android</code>: a clean server/client boundary, which is what finally
+        made it possible to change one without breaking the others.</li>
+  </ul>
+
+  <p style="margin-top:2.5rem"><a class="back" href="../#workshop">Back to the workshop</a></p>
+
+</div>
+</main>
+
+<script>
+(function(){
+  var btn=document.getElementById("theme");
+  function set(t){
+    document.documentElement.dataset.theme=t;
+    var dark=t==="dark";
+    btn.setAttribute("aria-pressed",dark);
+    btn.setAttribute("aria-label","Switch to "+(dark?"light":"dark")+" theme");
+    btn.querySelector(".theme-txt").textContent=dark?"Light":"Dark";
+  }
+  set(document.documentElement.dataset.theme||"light");
+  btn.addEventListener("click",function(){
+    var t=document.documentElement.dataset.theme==="dark"?"light":"dark";
+    try{localStorage.setItem("theme",t);}catch(e){}
+    set(t);
+  });
+})();
+</script>
+</body>
+</html>
