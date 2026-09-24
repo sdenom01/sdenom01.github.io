@@ -366,6 +366,33 @@ a.gcard-go:hover::after{ transform:translateX(.3rem); }
 .gcard:hover .gcard-media img{ transform:scale(1.045); filter:saturate(1) contrast(1.06); }
 .gcard-media iframe{ width:100%; height:100%; border:0; display:block; }
 
+/* Click-to-load poster. A Unity build is ~40MB; autoloading it stalls phones. */
+.playbtn{
+  position:relative; display:block; width:100%; height:100%;
+  padding:0; border:0; cursor:pointer; background:var(--ink); overflow:hidden;
+}
+.playbtn img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  filter:saturate(.9) brightness(.62);
+  transition:transform .6s cubic-bezier(.2,.8,.2,1), filter .4s;
+}
+.playbtn:hover img, .playbtn:focus-visible img{ transform:scale(1.04); filter:saturate(1) brightness(.75); }
+.play-ui{
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:.5rem; text-align:center; padding:1rem;
+}
+.play-icon{
+  display:grid; place-items:center; width:3.4rem; height:3.4rem; border-radius:50%;
+  background:var(--accent); color:var(--accent-ink); font-size:1.1rem;
+  padding-left:.2rem; transition:transform .25s cubic-bezier(.2,.8,.2,1);
+}
+.playbtn:hover .play-icon, .playbtn:focus-visible .play-icon{ transform:scale(1.1); }
+.play-txt{
+  font-family:var(--f-mono); font-size:.72rem; font-weight:500;
+  letter-spacing:.14em; text-transform:uppercase; color:#fff;
+}
+.play-sub{ font-family:var(--f-mono); font-size:.6rem; letter-spacing:.08em; color:#ffffffa8; }
+
 .gcard-glyph{
   position:absolute; inset:0; display:grid; place-items:center;
   font-family:var(--f-disp); font-weight:800;

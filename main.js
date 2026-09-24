@@ -45,7 +45,8 @@ const FEATURED = [
           "reload, and use the cover.",
     tag: "Jam build",
     itch: "https://zoped.itch.io/cluck-detective",
-    itchEmbed: "https://itch.io/embed-upload/13437361?color=1b1a16"
+    itchEmbed: "https://itch.io/embed-upload/13437361?color=1b1a16",
+    poster: "assets/hardboiled.jpg"   // shown until the visitor clicks Play
   }
 ];
 
@@ -92,8 +93,15 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">"
 /* ── featured cards ────────────────────────────────────── */
 function media(g) {
   if (g.itchEmbed)
-    return `<iframe src="${esc(g.itchEmbed)}" title="Play ${esc(g.title)}"
-              allowfullscreen loading="lazy"></iframe>`;
+    return `<button class="playbtn" type="button" data-src="${esc(g.itchEmbed)}"
+              aria-label="Play ${esc(g.title)} in the browser">
+              ${g.poster ? `<img src="${esc(g.poster)}" alt="" loading="lazy" decoding="async">` : ""}
+              <span class="play-ui">
+                <span class="play-icon" aria-hidden="true">&#9654;</span>
+                <span class="play-txt">Play in browser</span>
+                <span class="play-sub">Loads a Unity build &middot; ~40&nbsp;MB</span>
+              </span>
+            </button>`;
   if (g.img)
     return `<img src="${esc(g.img)}" alt="${esc(g.title)} artwork" loading="lazy" decoding="async">`;
   return `<span class="gcard-glyph" aria-hidden="true">${esc(g.title[0])}</span>`;
@@ -126,6 +134,18 @@ $("#featured").innerHTML = FEATURED.map((g, i) => {
     ? `<a class="${cls}"${d} href="${esc(g.itch)}" target="_blank" rel="noopener">${inner}</a>`
     : `<article class="${cls}"${d}>${inner}</article>`;
 }).join("");
+
+/* Swap the poster for the real frame only once someone asks for it. */
+$("#featured").addEventListener("click", e => {
+  const b = e.target.closest(".playbtn");
+  if (!b) return;
+  const f = document.createElement("iframe");
+  f.src = b.dataset.src;
+  f.title = b.getAttribute("aria-label");
+  f.allow = "autoplay; fullscreen; gamepad";
+  f.setAttribute("allowfullscreen", "");
+  b.replaceWith(f);
+});
 
 /* ── jam ledger + year filter ──────────────────────────── */
 const body = $("#ledger-body");
